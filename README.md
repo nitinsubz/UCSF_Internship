@@ -1,6 +1,6 @@
 # UCSF Internship - Vaccine Response Analysis
 
-During Summer '19, I was fortunate enough to intern as at *[UCSF's Butte Lab](https://buttelab.ucsf.edu)*. This repository contains all the relevant code from my research in the lab.
+During Summer '19, I was fortunate enough to intern as at *[UCSF's Butte Lab](http://buttelab.ucsf.edu)*. This repository contains all the relevant code from my research in the lab.
 
 
 ### The Data & Database
