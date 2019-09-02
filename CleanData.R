@@ -100,7 +100,7 @@ study <- study %>% filter(study$STUDY_ACCESSION%in%arms$STUDY_ACCESSION)
 diseases <- study %>% select(STUDY_ACCESSION)
 diseases <- diseases %>% mutate('DISEASE_TYPE' ='')
 
-diseases<- read.csv(file='diseases.csv',header = TRUE, sep=',')
+diseases<- read.csv(file='data/diseases.csv',header = TRUE, sep=',')
 diseases <- diseases %>% filter(diseases$STUDY_ACCESSION %in% arms$STUDY_ACCESSION)
 
 arms <- arms  %>% select(-DISEASE_TYPE)
@@ -169,11 +169,9 @@ outcome <- study %>% select(STUDY_ACCESSION)
 outcome <- outcome %>% mutate('OUTCOME' ='')
 
 
-outcome<- read.csv(file='outcomes.csv',header = TRUE, sep=',')
+outcome<- read.csv(file='data/outcomes.csv',header = TRUE, sep=',')
 outcome <- outcome %>% filter(outcome$STUDY_ACCESSION %in% arms$STUDY_ACCESSION)
 arms <- full_join(arms, outcome, by ="STUDY_ACCESSION")
-
-
 
 
 library(ggplot2)
@@ -194,4 +192,7 @@ ggplot(gd,  aes(x=reorder(DISEASE_TYPE, -n), y=n))+
   labs(x = "Disease Type", y = "Number")
 dev.off()
 
+
+
+allData <- arms
 
