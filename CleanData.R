@@ -110,11 +110,18 @@ arms <- full_join(arms, diseases, by ="STUDY_ACCESSION") %>%
 unique_table <- arms %>% select(STUDY_ACCESSION,DISEASE_TYPE) %>% unique()
 unique_table <- unique_table$DISEASE_TYPE %>% table() %>% sort()
 
-temp <- (arms%>%filter(DISEASE_TYPE  %in% c('Cholera', 'Diabetes', 'Ebola', 'HIV', 'Meningococcal', 'Newcastle','Palmoplantar Pustulosis','Pneumococcal','Pneumovax','Typhoid' ))) 
+temp <- (arms%>%filter(DISEASE_TYPE  %in% c( 'Diabetes', 'Ebola', 'HIV',  'Newcastle','Palmoplantar Pustulosis','Pneumococcal','Pneumovax' ))) 
 temp$DISEASE_TYPE <- "Other"
 
-arms <- arms%>%filter(!(DISEASE_TYPE  %in% c('Cholera', 'Diabetes', 'Ebola', 'HIV', 'Meningococcal', 'Newcastle','Palmoplantar Pustulosis','Pneumococcal','Pneumovax','Typhoid' )))
+arms <- arms%>%filter(!(DISEASE_TYPE  %in% c( 'Diabetes', 'Ebola', 'HIV',  'Newcastle','Palmoplantar Pustulosis','Pneumococcal','Pneumovax')))
 arms <- rbind(arms, temp)
+
+temp2 <- (diseases%>%filter(DISEASE_TYPE  %in% c('Diabetes', 'Ebola', 'HIV',  'Newcastle','Palmoplantar Pustulosis','Pneumococcal','Pneumovax' ))) 
+temp2$DISEASE_TYPE <- "Other"
+
+diseases <- diseases %>% filter(!(DISEASE_TYPE  %in% c('Diabetes', 'Ebola', 'HIV',  'Newcastle','Palmoplantar Pustulosis','Pneumococcal','Pneumovax')))
+diseases <- rbind(diseases, temp2)
+
 
 pie(table(arms$DISEASE_TYPE))
 pie(table((arms%>%filter(DISEASE_TYPE != 'Influenza'))$DISEASE_TYPE))
@@ -131,7 +138,7 @@ long <- wide %>% unique() %>% spread(MEASUREMENT_TECHNIQUE, USED, fill = 0)
 long <- long %>% remove_rownames %>% column_to_rownames(var="STUDY_ACCESSION")
 long <- t(long)
 
-pdf("corrplot_studies.pdf", width = 30, height = 20)
+pdf("Analysis/corrplot_studies.pdf", width = 30, height = 20)
 corrplot(as.matrix(long), method="circle",is.corr = F, tl.col = "black")
 dev.off()
 
@@ -139,7 +146,7 @@ dev.off()
 rclust = hclust(d = dist(long))
 cclust = hclust(d = dist(t(long)))
 long2 = long[rclust$order,cclust$order]
-pdf("corrplot_studies_clustered.pdf", width = 30, height = 20)
+pdf("Analysis/corrplot_studies_clustered.pdf", width = 30, height = 20)
 corrplot(as.matrix(long2), method="circle",is.corr = F,tl.col = "black")
 dev.off()
 
@@ -151,7 +158,7 @@ simplified <- simplified %>% filter(rowSums(simplified %>% select(`Flow Cytometr
 simplified <- simplified %>% select(STUDY_ACCESSION, `Flow Cytometry`, `Hemagglutination Inhibition`, ELISA, `DNA microarray`, `Transcription profiling by array`, ELISPOT, `Virus Neutralization`, `Immunology Test`, `Luminex xMAP`, Sequencing, `Q-PCR`, CyTOF, `HLA Typing`)
 simplified <- simplified %>% remove_rownames %>% column_to_rownames(var="STUDY_ACCESSION")
 simplified <- t(simplified)
-pdf("corrplot_studies_simplified.pdf", width = 35, height = 10)
+pdf("Analysis/corrplot_studies_simplified.pdf", width = 35, height = 10)
 corrplot(as.matrix(simplified), method="circle",is.corr = F, tl.col = "black")
 dev.off()
 
@@ -159,7 +166,7 @@ dev.off()
 rclust2 = hclust(d = dist(simplified))
 cclust2 = hclust(d = dist(t(simplified)))
 simplified2 = simplified[rclust2$order,cclust2$order]
-pdf("corrplot_simplified_clustered.pdf", width = 35, height = 10)
+pdf("Analysis/corrplot_simplified_clustered.pdf", width = 35, height = 10)
 corrplot(as.matrix(simplified2), method="circle",is.corr = F,tl.col = "black")
 dev.off()
 
@@ -177,7 +184,7 @@ arms <- full_join(arms, outcome, by ="STUDY_ACCESSION")
 library(ggplot2)
 
 gp <- count(arms, STUDY_ACCESSION)
-pdf("study_measurements.pdf", width = 40, height = 20)
+pdf("Analysis/study_measurements.pdf", width = 40, height = 20)
 ggplot(gp,  aes(x=reorder(STUDY_ACCESSION, -n), y=n))+
   geom_bar(stat="identity", width=0.7, color = "blue", fill="cadetblue1")+
   theme(axis.text.x = element_text(angle=45, hjust = 1, size=15), panel.background = element_rect(fill='aliceblue',color = 'green'), axis.title.x = element_text(size = 30), axis.text.y = element_text(size = 20), axis.title.y = element_text(size = 30)) +
@@ -185,13 +192,20 @@ ggplot(gp,  aes(x=reorder(STUDY_ACCESSION, -n), y=n))+
 dev.off()
 
 gd <- count(arms, DISEASE_TYPE)
-pdf("study_diseases.pdf", width = 40, height = 20)
+pdf("Analysis/study_diseases.pdf", width = 40, height = 20)
 ggplot(gd,  aes(x=reorder(DISEASE_TYPE, -n), y=n))+
   geom_bar(stat="identity", width=.9, color = "blue", fill="cadetblue1")+
   theme(panel.background = element_rect(fill='aliceblue',color = 'green'), axis.title.x = element_text(size = 30), axis.text.x = element_text(size = 20, angle = 45, hjust = 1), axis.text.y = element_text(size = 20), axis.title.y = element_text(size = 30))+
   labs(x = "Disease Type", y = "Number")
 dev.off()
 
+study_dis <- count(diseases, DISEASE_TYPE)
+pdf("Analysis/study_diseases_117.pdf", width = 40, height = 20)
+ggplot(study_dis,  aes(x=reorder(DISEASE_TYPE, -n), y=n))+
+  geom_bar(stat="identity", width=.9, color = "blue", fill="cadetblue1")+
+  theme(panel.background = element_rect(fill='aliceblue',color = 'green'), axis.title.x = element_text(size = 30), axis.text.x = element_text(size = 20, angle = 45, hjust = 1), axis.text.y = element_text(size = 20), axis.title.y = element_text(size = 30))+
+  labs(x = "Disease Type", y = "Number")
+dev.off()
 
 
 allData <- arms
