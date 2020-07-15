@@ -57,7 +57,7 @@ During Summer '19, I was fortunate enough to intern as at *[UCSF's Butte Lab](ht
 > - MEASUREMENT_TECHNIQUE
 
 ### Queries
-> - count(arms %>% select(STUDY_ACCESSION, MEASUREMENT_TECHNIQUE) %>% unique(), MEASUREMENT_TECHNIQUE)
->   - Returns the amount of times each measurement assay is used in the data
+> - `count(arms %>% select(STUDY_ACCESSION, MEASUREMENT_TECHNIQUE) %>% unique(), MEASUREMENT_TECHNIQUE)`
+> - Returns the amount of times each measurement assay is used in the data
 
 
